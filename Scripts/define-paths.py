@@ -42,36 +42,8 @@ def getDirectory():
     else:
         print("Could not find KSA Directory. Please input your directory. (example:  C:\\Program Files\\Kitten Space Agency)")
         return getInputForFile()
-
-
-
-
-cwd = os.getcwd()
-parent = os.path.abspath(os.path.join(cwd, os.pardir))
-
-# Window
-
-import tkinter as tk
-
-root = tk.Tk()
-root.title("Kitten Friendly Mod Manager")
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
-root.geometry(f"{screen_width}x{screen_height}")
-root.iconbitmap((parent+"\\KittenFriendlyModManager\\Assets\\ksa_ico.ico"))
-root.configure(bg='gray19') 
-root.resizable(False, False)
-
-Sidebar = tk.Frame(root,bg='gray10', width=200, height=10000)
-Sidebar.place(x=root.winfo_width()-(root.winfo_width()//20),y=0)
-
-
-Close_button = tk.Button(Sidebar, image=((parent+"\\KittenFriendlyModManager\\Assets\\close_button.png")),command=root.destroy, bg='gray48')
-Close_button.config(width=15,height=15)
-Close_button.pack()
-Close_button.place(x=root.winfo_width()-(root.winfo_width()//1.01),y=root.winfo_height()-(root.winfo_height()//7.2))
-Credits_button = tk.Button(root, text="Credits", width=17, height=8, command=root.destroy, bg='gray48')
-Credits_button.pack()
-Credits_button.place(x=root.winfo_width()-(root.winfo_width()//25.3),y=root.winfo_height()-(root.winfo_height()//4))
-
-root.mainloop()
+    
+with open('Paths/ManifestDirectory', "w") as file:
+    file.write(getManifest())
+with open('Paths/KSADirectory', "w") as file:
+    file.write(getDirectory())
