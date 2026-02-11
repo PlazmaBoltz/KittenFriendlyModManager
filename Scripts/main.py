@@ -1,7 +1,4 @@
-import subprocess
-import sys
 import requests
-import json
 import os
 import urllib.request
 import shutil
