@@ -178,8 +178,8 @@ def getModData(url,mods):
         for i in recievedJSON["Dependencies"]:
             if i["type"] == 1:
                 print(i["mod"]+" is a required mod.")
-                if i["mod"] == "StarmapAPI":
-                    print("Requires Starmap version "+ i["Version"])
+                #if i["mod"] == "StarmapAPI":
+                    #print("Requires Starmap version "+ i["Version"])
             elif i["type"] == 0:
                 print(i["mod"]+" is a recommended mod.")
             elif i["type"] == 2:
