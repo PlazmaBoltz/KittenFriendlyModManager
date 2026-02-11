@@ -129,8 +129,6 @@ def ModInstallMenu():
     else:
         print("Not a valid input. Please enter something else. \n")
         ModInstallMenu()
-def RecieveMods():
-    print("tba")
 def debug():
     #tba
     print("\n\nDebug Console")
