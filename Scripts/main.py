@@ -170,7 +170,22 @@ def installMod(url, mods):
     recievedJSON = requests.get(repository_url+mods[url]).json()
     print("Downloading "+recievedJSON["title"]+" to "+str(open("Paths/KSADirectory").read())+"\Content")
     f = open(("temp/"+url+".zip"),'wb')
-    f.write(urllib.request.urlopen(recievedJSON["Download_Link"]).read())
+    with urllib.request.urlopen(recievedJSON["Download_Link"]) as response:
+        total_size = int(response.getheader("Content-Length").strip())
+        bytes_downloaded = 0
+        chunk_size = 65536  # 64 KB
+
+        with open(("temp/"+url+".zip"), "wb") as f:
+            while True:
+                chunk = response.read(chunk_size)
+                if not chunk:
+                    break
+
+                f.write(chunk)
+                bytes_downloaded += len(chunk)
+
+                percent = (bytes_downloaded / total_size) * 100
+                print(f"Downloading: "+str(percent)+"% - ("+str(bytes_downloaded)+"B/"+str(total_size)+"B)")
     f.close()
     print("Finished Downloading")
     print("Extracting Files")
@@ -179,6 +194,12 @@ def installMod(url, mods):
     print("Finished Installing")
     print("Enabling Mod")
     file = open("Paths/ManifestDirectory").read()
+    if str('[[mods]]\nid = "'+url+'"\nenabled = true\n') in open(file).read():
+        print("Mod already enabled")
+    else:
+        print("Mod not enabled; Enabling.")
+        with open(file,'a') as f:
+           f.write(str('\n[[mods]]\nid = "'+url+'"\nenabled = true\n'))
     print("Done!\n")
     MainMenu()
 MainMenu()
