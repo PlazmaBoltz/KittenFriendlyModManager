@@ -43,12 +43,13 @@ def getInputForFile():
 def getDirectory():
     potDir = "C:\\users\\"+os.getenv('username')+"\\OneDrive\\Documents\\My Games\\Kitten Space Agency\\mods"
     if os.path.isdir(potDir):
-        Directory = potDir
+        Directory = (potDir)
         print("Found Mods Directory")
         return Directory
     else:
         #should never be true
         print("Your KSA is potentially corrupted. There should be a folder in Documents/My Games/Kitten Space Agency called mods")
+        print("This is likely caused by your KSA version being older than 2026.2.34.3656")
 def MainMenu():
     print("-- Kitten Friendly Mod Manager --")
     print("1. Install Mods")
@@ -137,8 +138,10 @@ def readInstalledMods(installedMods):
         inp = str(input("Option: "))
         if inp == "1":
             print("tba")
+            MainMenu()
         if inp == "2":
             print("tba")
+            MainMenu()
         else:
             MainMenu()
     else:

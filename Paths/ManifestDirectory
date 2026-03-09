@@ -1,1 +1,1 @@
-C:\users\gjcer\OneDrive\Documents\My Games\Kitten Space Agency\manifest.toml
+"C:\\users\\"+os.getenv('username')+"\\OneDrive\\Documents\\My Games\\Kitten Space Agency\\manifest.toml"
