@@ -12,11 +12,12 @@ repo = 'KSA-Mods-Library'
 repository_url = f"{git}/{owner}/{repo}/refs/heads/main/"
 current_version = requests.get(repository_url+"current_version.json").json()["current_version"]
 #print(current_version)
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 def get_paths():
-    with open('Paths/ManifestDirectory', "w") as file:
+    with open(os.path.join(script_dir, 'Paths/ManifestDirectory'), "w") as file:
         file.write(getManifest())
-    with open('Paths/KSADirectory', "w") as file:
+    with open(os.path.join(script_dir, 'Paths/KSADirectory'), "w") as file:
         file.write(getDirectory())
 def getManifest():
     potDir = ("C:\\users\\"+os.getenv('username')+"\\OneDrive\\Documents\\My Games\\Kitten Space Agency")
@@ -40,25 +41,14 @@ def getInputForFile():
             print("Not a KSA Folder")
             getInputForFile()
 def getDirectory():
-    potDir1 = ("C:\\Program Files (x86)\\Kitten Space Agency")
-    potDir2 = ("C:\\Program Files\\Kitten Space Agency")
-    potDir3 = ("C:\\Kitten Space Agency")
-    potDir4 = ("E:\\Kitten Space Agency") # only for plazma to have an easier time with testing
-    if os.path.isfile(potDir1+"\\KSA.dll"):
-        print("Found KSA Directory")
-        return potDir1
-    elif os.path.isfile(potDir2+"\\KSA.dll"):
-        print("Found KSA Directory")
-        return potDir2
-    elif os.path.isfile(potDir3+"\\KSA.dll"):
-        print("Found KSA Directory")
-        return potDir3
-    elif os.path.isfile(potDir4+"\\KSA.dll"):
-        print("Found KSA Directory")
-        return potDir4
+    potDir = "C:\\users\\"+os.getenv('username')+"\\OneDrive\\Documents\\My Games\\Kitten Space Agency\\mods"
+    if os.path.isdir(potDir):
+        Directory = potDir
+        print("Found Mods Directory")
+        return Directory
     else:
-        print("Could not find KSA Directory. Please input your directory. (example:  C:\\Program Files\\Kitten Space Agency)")
-        return getInputForFile()
+        #should never be true
+        print("Your KSA is potentially corrupted. There should be a folder in Documents/My Games/Kitten Space Agency called mods")
 def MainMenu():
     print("-- Kitten Friendly Mod Manager --")
     print("1. Install Mods")
@@ -87,7 +77,7 @@ def ModInstallMenu():
     textInput = input("Option to select: ")
     if textInput == "1":
         print("\n")
-        if open("Paths/KSADirectory").read() and open("Paths/ManifestDirectory").read():
+        if open(os.path.join(script_dir, 'Paths/KSADirectory')).read() and open(os.path.join(script_dir, 'Paths/ManifestDirectory')).read():
             mods = getMods()
             for i in mods:
                 print(i)
@@ -120,12 +110,43 @@ def ModInstallMenu():
         else:
             ModInstallMenu()
     elif textInput == "3":
-        print("\n")
+        print("tba")
+        MainMenu()
     elif textInput == "4":
         MainMenu()
     else:
         print("Not a valid input. Please enter something else. \n")
         ModInstallMenu()
+def viewInstalledMods():
+    folder = open(os.path.join(script_dir, 'Paths/KSADirectory'), "w")
+    installedMods = []
+    for mod in getMods():
+        if os.path.join(folder, mod):
+            print(mod)
+            installedMods.append(mod)
+    print(installedMods)
+    readInstalledMods(installedMods)
+def readInstalledMods(installedMods):
+    print(installedMods)
+    inp = str(input("Enter mod to view or press enter to go back: "))
+    if inp in installedMods:
+        print("\nOptions:")
+        print("1. Uninstall")
+        print("2. Update")
+        print("3. Back")
+        inp = str(input("Option: "))
+        if inp == "1":
+            print("tba")
+        if inp == "2":
+            print("tba")
+        else:
+            MainMenu()
+    else:
+        if inp == "\n":
+            MainMenu()
+        else:
+            print("Invalid Mod Name!")
+            readInstalledMods(installedMods)
 def debug():
     #tba
     print("\n\nDebug Console")
@@ -192,14 +213,14 @@ def getModData(url,mods):
         getModData(input("Mod Name: "))
 def installMod(url, mods):
     recievedJSON = requests.get(repository_url+mods[url]).json()
-    print("Downloading "+recievedJSON["title"]+" to "+str(open("Paths/KSADirectory").read())+"\Content")
-    f = open(("temp/"+url+".zip"),'wb')
+    print("Downloading "+recievedJSON["title"]+" to "+str(open(os.path.join(script_dir, 'Paths/KSADirectory')).read()))
+    f = open((os.path.join(script_dir, ("temp\\"+url+".zip"))),'wb')
     with urllib.request.urlopen(recievedJSON["Download_Link"]) as response:
         total_size = int(response.getheader("Content-Length").strip())
         bytes_downloaded = 0
         chunk_size = 65536  # 64 KB
 
-        with open(("temp/"+url+".zip"), "wb") as f:
+        with open((os.path.join(script_dir, (("temp\\"+url+".zip")))), "wb") as f:
             while True:
                 chunk = response.read(chunk_size)
                 if not chunk:
@@ -213,11 +234,11 @@ def installMod(url, mods):
     f.close()
     print("Finished Downloading")
     print("Extracting Files")
-    shutil.unpack_archive(("temp/"+url+".zip"), (str(open("Paths/KSADirectory").read())+"\Content"))
-    os.remove("temp/"+url+".zip")
+    shutil.unpack_archive((os.path.join(script_dir, ("temp\\"+url+".zip"))), (str(open(os.path.join(script_dir, 'Paths/KSADirectory')).read())))
+    os.remove(os.path.join(script_dir, ("temp\\"+url+".zip")))
     print("Finished Installing")
     print("Enabling Mod")
-    file = open("Paths/ManifestDirectory").read()
+    file = open(os.path.join(script_dir, 'Paths/ManifestDirectory')).read()
     if str('[[mods]]\nid = "'+url+'"\nenabled = true\n') in open(file).read():
         print("Mod already enabled")
     else:
