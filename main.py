@@ -160,6 +160,8 @@ def debug():
         print("Title: "+ recievedJSON["title"])
         print("Short Description: "+ recievedJSON["Description_Short"])
         print("Long Description: "+ recievedJSON["Description_Long"])
+        if recievedJSON["author"]:
+            print("Author: "+recievedJSON["author"])
         print("Version: "+ recievedJSON["Version"])
         print("Supported Version: "+ recievedJSON["Supported_Version"])
         if recievedJSON["Supported_Version"] != current_version:
@@ -192,6 +194,8 @@ def getModData(url,mods):
         print("Title: "+ recievedJSON["title"])
         print("Short Description: "+ recievedJSON["Description_Short"])
         print("Long Description: "+ recievedJSON["Description_Long"])
+        if recievedJSON["author"]:
+            print("Author: "+recievedJSON["author"])
         print("Version: "+ recievedJSON["Version"])
         print("Supported Version: "+ recievedJSON["Supported_Version"])
         if recievedJSON["Supported_Version"] != current_version:
